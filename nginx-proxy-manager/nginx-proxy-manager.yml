@@ -1,0 +1,16 @@
+version: '3'
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - J:\Estudios\Docker-Apps\volumes\nginx-proxy-manager-data:/data
+      - J:\Estudios\Docker-Apps\volumes\letsencrypt:/etc/letsencrypt
+
+#volumes:
+ # nginx-proxy-manager-data: J:\Estudios\Docker-Apps\volumes\nginx-proxy-manager-data
+  #letsencrypt: J:\Estudios\Docker-Apps\volumes\letsencrypt
