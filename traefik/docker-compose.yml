@@ -1,8 +1,10 @@
 version: '3'
 
 services:
-  reverse-proxy:
+  traefik:
     # The official v2 Traefik docker image
+    container_name: traefik
+    restart: always
     image: traefik:v2.6
     # Enables the web UI and tells Traefik to listen to docker
     command: --api.insecure=true --providers.docker
@@ -11,7 +13,12 @@ services:
       - "80:80"
       # The Web UI (enabled by --api.insecure=true)
       - "8080:8080"
+      - "443:443"
     volumes:
       # So that Traefik can listen to the Docker events
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.service=api@internal"

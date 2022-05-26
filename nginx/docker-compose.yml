@@ -1,0 +1,17 @@
+services:
+  ngnix:
+    container_name: ngnix
+    image: 'nginx:1.21.6-alpine'
+    restart: unless-stopped
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ngnix.rule=Host(`localhost`)"
+      - "traefik.http.routers.ngnix.entrypoints=web"
+      - "traefik.http.services.ngnix.loadbalancer.server.port=80"
+      - "traefik.http.routers.ngnix.service=ngnix"
+
+networks:
+  traefik:
+    name: traefik_default

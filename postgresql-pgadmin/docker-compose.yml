@@ -1,17 +1,18 @@
 services:
   postgres:
     image: postgres:13.4-alpine
-    restart: always
+    restart: unless-stopped
+
     environment:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=prestabooks_db
     networks:
       - traefik
-    labels:
-      - traefik.enable=true
 
   pgadmin:
     image: dpage/pgadmin4:5.6
+    restart: unless-stopped
+
     environment:
       - PGADMIN_DEFAULT_EMAIL=darpa@darpa.com
       - PGADMIN_DEFAULT_PASSWORD=123456789
@@ -21,7 +22,7 @@ services:
       - traefik
     labels:
       - traefik.enable=true
-      - traefik.http.routers.pgadmin=Host(`pgadmin.home.com`)
+      - traefik.http.routers.pgadmin.rule=Host(`pgadmin.localhost`)
 
 networks:
   traefik:

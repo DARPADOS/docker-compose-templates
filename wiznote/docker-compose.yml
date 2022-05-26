@@ -1,0 +1,31 @@
+# docker run --name wiz --restart=always -it -d -v  ~/wizdata:/wiz/storage -v  /etc/localtime:/etc/localtime -p 80:80 -p 9269:9269/udp  wiznote/wizserver
+
+version: '3'
+
+volumes:
+  wizdata:
+    driver: local
+
+services:
+  wiznote:
+    container_name: wiznote
+    image: 'wiznote/wizserver'
+    ports:
+      #- '80:80'
+      - '9296:9296/udp'
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - wizdata:/wiz/storage
+    networks:
+      - traefik
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.wiz.rule=Host(`wiznote.localhost`)'
+      - "traefik.http.routers.wiz.entrypoints=web"
+      - "traefik.http.services.wiz.loadbalancer.server.port=80"
+      - "traefik.http.routers.wiz.service=wiz"
+    restart: unless-stopped
+
+networks:
+  traefik:
+    name: traefik_default
