@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  grav-cms:
+    image: linuxserver/grav:arm64v8-1.7.33
+    container_name: grav
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - TZ=America/Lima
+    volumes:
+      - grav-data:/config
+    #ports:
+    #  - 80
+    restart: unless-stopped
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grav.rule=Host(`grav.localhost`)"
+      - "traefik.http.routers.grav.entrypoints=web"
+      - "traefik.http.services.grav.loadbalancer.server.port=80"
+      - "traefik.http.routers.grav.service=grav"
+
+networks:
+  traefik:
+    name: traefik_default
+
+volumes:
+  grav-data:
+    driver: local
