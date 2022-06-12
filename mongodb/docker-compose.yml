@@ -14,6 +14,7 @@ services:
 
   mongo-express:
     image: mongo-express
+    container_name: mongo-dash
     restart: always
     ports:
       - 8081:8081
@@ -25,10 +26,10 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ngnix.rule=Host(`mongo-dash.home.pi`)"
-      - "traefik.http.routers.ngnix.entrypoints=web"
-      - "traefik.http.services.ngnix.loadbalancer.server.port=8081"
-      - "traefik.http.routers.ngnix.service=ngnix"
+      - "traefik.http.routers.mongo-dash.rule=Host(`mongo-dash.home.pi`)"
+      - "traefik.http.routers.mongo-dash.entrypoints=web"
+      - "traefik.http.services.mongo-dash.loadbalancer.server.port=8081"
+      - "traefik.http.routers.mongo-dash.service=ngnix"
 
 networks:
   traefik:
