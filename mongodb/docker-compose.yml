@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
 
-  mongo:
+  mongodb:
     image: mongo:4.4.14
     container_name: mongodb
     restart: always
@@ -11,6 +11,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: darpa
       MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - traefik
 
   mongo-express:
     image: mongo-express
@@ -21,15 +23,15 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: darpa
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://darpa:example@mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://darpa:example@mongodb:27017/
     networks:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mongo-dash.rule=Host(`mongo-dash.home.pi`)"
-      - "traefik.http.routers.mongo-dash.entrypoints=web"
-      - "traefik.http.services.mongo-dash.loadbalancer.server.port=8081"
-      - "traefik.http.routers.mongo-dash.service=ngnix"
+      - "traefik.http.routers.mongo-express.rule=Host(`mongo.home.pi`)"
+      - "traefik.http.routers.mongo-express.entrypoints=web"
+      - "traefik.http.services.mongo-express.loadbalancer.server.port=8081"
+      - "traefik.http.routers.mongo-express.service=mongo-express"
 
 networks:
   traefik:
